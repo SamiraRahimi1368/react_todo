@@ -19,7 +19,7 @@ const App = () => {
 
   return (
     <div className='row'>
-      <form>
+      <form onSubmit={addTask}>
         <div className='row col s6'>
           <div className='input-field col s10'>
             <textarea
@@ -35,7 +35,7 @@ const App = () => {
         <div className='row col s6'>
           <br></br>
           <button className='waves-effect waves-light btn' type="submit">
-            <i className='material-icons left' onClick={addTask}>
+            <i className='material-icons left'>
               add_circle
             </i>
             Add
