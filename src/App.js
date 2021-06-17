@@ -1,106 +1,65 @@
-import React, { useState } from "react";
-const App = () => {
-  const [NewTaskText, setNewTaskText] = useState("");
-  const [Tasks, setTasks] = useState(["do a task", "samira"]);
-  const handleDelete = i => {
-    const taskList = [...Tasks]
-    taskList.splice(i, 1)
-    setTasks(taskList)
-  }
-  const addTask = (e) => {
-    e.preventDefault();
-    if (!NewTaskText) return;
-    setTasks((currentTasks) => {
-      return [...currentTasks, NewTaskText];
-    });
-    setNewTaskText("");
-  };
+import React, { useState } from 'react'
 
-  const onchangeInput = (e) => {
-    const value = e.target.value;
-    setNewTaskText(value);
-  };
+export default function App() {
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Read book', done: true },
+    { id: 2, title: 'Write letter', done: false },
+    { id: 3, title: 'Edit cover', done: false },
+  ])
+  const [task, setTask] = useState('')
+
+  const onChangeInput = (e) => {
+    const value = e.target.value
+    setTask(value)
+  }
+
+  const onSubmitTodo = () => {
+    let newTask = {
+      id: new Date().getTime().toString(),
+      title: task,
+      done: true,
+    }
+    setTasks([...tasks, newTask])
+  }
+
+  const onChangeBox = (item) => {
+    const myTasks = tasks.map((el) =>
+      el.id === item.id ? { ...el, done: !el.done } : el
+    )
+    setTasks(myTasks)
+  }
+
+  const handleDel = (item) => {
+    const newTasks = tasks.filter((el) => el.id !== item.id)
+    setTasks(newTasks)
+  }
 
   return (
-    <div className="row">
-      <form onSubmit={addTask}>
-        <div className="row col s6">
-          <div className="input-field col s10">
-            <textarea
-              id="textarea1"
-              className="materialize-textarea"
-              value={NewTaskText}
-              onChange={onchangeInput}
-            ></textarea>
+    <>
+      <h2>ToDo List:</h2>
 
-            <label htmlFor="textarea1">What needs to be done ?</label>
-          </div>
-        </div>
-      
+      <input type='text' value={task} onChange={onChangeInput} />
 
-      <div className="row col s6">
-        <br></br>
-        <a className='waves-effect waves-light btn' href="/#" onClick={addTask}>
-            <i className='material-icons left' >
-              add_circle
-            </i>
-            Add
-          </a>
-      </div>
-      </form>
-      <div className="row">
-        <div className="row col s9">
-          <ul className="collection with-header">
-            <li className="collection-header">
-              <h4>Todo List</h4>
+      <button onClick={onSubmitTodo}>Submit</button>
 
-              <form>
-                <div className="input-field">
-                  <input id="search" type="search" required />
-                  <label className="label-icon" htmlFor="search">
-                    <i className="material-icons">search</i>Search
-                  </label>
-                  <i className="material-icons">close</i>
-                </div>
-              </form>
-            </li>
-            <label>
-             
-              {Tasks.map((item, i) => {
-                return (
-                 
-                  <li className="collection-item" key={i}>
-                   
-                    <input type="checkbox" />
-                    <span>
-                   
-                      {item}
-                      </span>
-                  
-                    <span>
-                      <a href="#!" className="secondary-content">
-                        <i className="material-icons" onClick={() => handleDelete(i)}>delete</i>
-                        <i className="material-icons">check_circle</i>
-                      </a>
-                    </span>
-                 
-                  </li>
-                 
-                );
-              })}
-            
-            </label>
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-};
-export default App;
-
-
-
-
-
-
-
+      <ul style={{ marginLeft: '20px' }}>
+        {tasks.map((item) => (
+          <li
+            key={item.id}
+            style={{ textDecoration: item.done ? 'line-through' : null }}
+          >
+            <input
+              type='checkbox'
+              onClick={() => onChangeBox(item)}
+              defaultChecked={item.done}
+            />
+            {item.title}
+            <button type='button' onClick={() => handleDel(item)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
